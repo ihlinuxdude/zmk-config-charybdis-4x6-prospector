@@ -22,15 +22,7 @@
 };
 
 / {
-	chosen {
-		zmk,output = &ble;
-	};
-
-	ble: ble {
-		status = "okay";
-	};
-
-	bt_central: bt_central {
+	bt_peripheral: bt_peripheral {
 		status = "okay";
 	};
 };
