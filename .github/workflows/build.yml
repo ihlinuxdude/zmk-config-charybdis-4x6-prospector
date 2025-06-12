@@ -5,4 +5,29 @@ permissions:
 
 jobs:
   build:
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
+    runs-on: ubuntu-latest
+    container:
+      image: zmkfirmware/zmk-build-arm:2.4
+
+    steps:
+      - name: Checkout config repo
+        uses: actions/checkout@v3
+
+      - name: Initialize west
+        run: west init -l config && west update
+
+      - name: Build left half
+        run: |
+          west build -s app -b nice_nano_v2 -d build/left -- -DSHIELD=charybdis_left
+          mkdir -p output/left && cp build/left/zephyr/zmk.uf2 output/left/left.uf2
+
+      - name: Build right half
+        run: |
+          west build -s app -b nice_nano_v2 -d build/right -- -DSHIELD=charybdis_right
+          mkdir -p output/right && cp build/right/zephyr/zmk.uf2 output/right/right.uf2
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dongle-free-charybdis-firmware
+          path: output
