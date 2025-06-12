@@ -19,3 +19,12 @@
 		, <&pro_micro 9 GPIO_ACTIVE_HIGH>
         ;
 };
+/ {
+    &ble_central_output {
+        status = "okay";
+    };
+
+    &bt_central {
+        status = "okay";
+    };
+};
